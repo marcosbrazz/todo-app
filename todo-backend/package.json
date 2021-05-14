@@ -1,0 +1,15 @@
+{
+  "name": "todo-backend",
+  "description": "multi-container version of the todoapp",
+  "version": "0.0.2",
+  "private": true,
+  "author": "Red Hat Training",
+  "license": "ASL",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "axios": "^0.21.1",
+    "express": "^4.17.1"
+  }
+}
