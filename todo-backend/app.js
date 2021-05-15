@@ -1,10 +1,12 @@
-const express = require('express')
-const server = express()
+const express = require('express');
+const cors = require('cors');
+const server = express();
 
 var controller = require('./controllers/items');
 var serverinfo = require('./controllers/serverinfo');
 var db = require('./models/db');
 
+server.use(cors());
 server.use(express.json());
 
 controller.context(server, '/todo/api', db); 
@@ -17,11 +19,3 @@ server.listen(port, function (err) {
     else
         console.log('App is ready at : ' + port);
 });
-
-
-/* 
-process.on('uncaughtException', function (err) {
-    console.error(JSON.parse(JSON.stringify(err, ['stack', 'message', 'inner'], 2)))
-});
-*/    
-

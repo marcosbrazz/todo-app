@@ -11,7 +11,6 @@ exports.context = function(server, path, dbModel) {
         
     server.get(context + '/', this.list);
     server.get(context + '/:id', this.read);
-    // server.get(context + '-count', this.count);
     server.post(context + '/', this.save);
     server.delete(context + '/:id', this.destroy);
     
@@ -70,29 +69,49 @@ exports.read = function(req, res, next) {
 };
 
 exports.save = function(req, res, next) {
-    if(req.query.id) {
-        db.put('/' + req.query.id, {
-            _id: req.query.id,
-            _rev: req.query.rev,
-            description: req.query.description,
-            done: req.query.done
-        })
-        .then(function(response) {
-            res.json(response.data);
-            next();
-        })
-        .catch(function(error) {
-            res.send(error);
-            next();
-        });
+    if(req.body.id) {
+        db.get('/' + req.body.id)
+            .then(function(response) {
+                update = {
+                    _id: response.data._id,
+                    _rev: response.data._rev,
+                    description: req.body.description,
+                    done: req.body.done
+                }
+                db.put('/' + req.body.id, update)
+                    .then(function(response) {
+                        res.json({
+                            id: response.data.id,
+                            rev: response.data.rev,
+                            description: req.body.description,
+                            done: req.body.done
+                        });
+                        next();
+                    })
+                    .catch(function(error) {
+                        console.error(error);
+                        res.send(error);
+                        next();
+                    });
+            })
+            .catch(function(error) {
+                console.error(error);
+                res.send(error);
+                next();
+            });
     }
     else {
         db.post('/', {
-            description: req.query.description,
-            done: req.query.done
+            description: req.body.description,
+            done: !!req.query.done
         })
         .then(function(response) {
-            res.json(response.data);
+            res.json({
+                id: response.data.id,
+                rev: response.data.rev,
+                description: req.body.description,
+                done: req.body.done
+            });
             next();
         })
         .catch(function(error) {
@@ -129,21 +148,3 @@ exports.destroy = function(req, res, next) {
         next();
     }
 }
-
-
-
-// exports.count = function(req, res, next) {
-
-//     // model.countAll(function(err, n) {
-//     //     if (err) {
-//     //         res.send(err);
-//     //     } 
-//     //     else {
-//     //         var page = { 
-//     //           count: n
-//     //         };
-//     //         res.json(page)
-//     //         next();
-//     //     }
-//     // })
-// };
