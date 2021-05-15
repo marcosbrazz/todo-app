@@ -1,0 +1,10 @@
+{
+    "/api/items": {
+        "target": "http://localhost:8080",
+        "secure": false
+    },
+    "/api/items/:id": {
+        "target": "http://localhost:8080",
+        "secure": false
+    }
+}
