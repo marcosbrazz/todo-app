@@ -3,7 +3,7 @@ services:
   frontend:
     build: 
       context: todo-frontend_node
-    image: frontend_image
+    image: todo-frontend:proxy
     ports: 
       - "8080:8080"
     links:
@@ -11,7 +11,9 @@ services:
     environment:
       - BACKEND_HOST=backend:8100
   backend:
-    build: ./todo-backend
+    build: 
+      context: todo-backend
+    image: todo-backend
     ports: 
       - "8100:8100"
     environment:
